@@ -49,27 +49,6 @@ public class EmployeeController {
     @GetMapping("/employees")
     public List<Employee> getAllEmployee(HttpServletRequest request) {
 
-        /* For logging date */
-        String userAgent = request.getHeader("user-agent");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        String hitTime = dtf.format(now);
-        logger.info("hit-time " + hitTime);
-
-        /* For logging browser details */
-        logger.info("Client-info " + userAgent);
-
-        /* Logging IP address of client */
-        String remoteAddr = "";
-
-        if (request != null) {
-            remoteAddr = request.getHeader("X-FORWARDED-FOR");
-            if (remoteAddr == null || "".equals(remoteAddr)) {
-                remoteAddr = request.getRemoteAddr();
-            }
-        }
-        logger.info(remoteAddr);
-
         List<Employee> employees = (List<Employee>) db.findAll();
         employees.forEach(employee -> {
             System.out.println(employee);
@@ -103,9 +82,6 @@ public class EmployeeController {
 
         // Saving in JPA repo
         Employee emp = db.save(employee);
-        // Saving in Elastic Repo
-        // elkdb.save(employee);
-
         return emp;
     }
 
@@ -124,8 +100,7 @@ public class EmployeeController {
         List<Employee> itrEmpList = List.of(employee);
         // Saving in JPA repo
         itrEmpList = (List<Employee>) db.saveAll(itrEmpList);
-        // Saving in elastic repo
-        // elkdb.saveAll(itrEmpList);
+
         return itrEmpList;
     }
 
@@ -144,8 +119,7 @@ public class EmployeeController {
 
         // deleting from JPA repo
         db.deleteById(id);
-        // deleting from elastic repo
-        // elkdb.deleteById(id);
+
     }
 
     @DeleteMapping("/deleteall")
@@ -162,8 +136,7 @@ public class EmployeeController {
 
         // deleting from JPA repo
         db.deleteAll();
-        // deleting from elastic repo
-        // elkdb.deleteAll();
+
     }
 
     @PutMapping("update-employee")
@@ -181,8 +154,7 @@ public class EmployeeController {
         emp.setId(id);
         // saving in JPA repo
         db.save(emp);
-        // saving in elastic repo
-        // elkdb.save(emp);
+
         return emp;
     }
 
